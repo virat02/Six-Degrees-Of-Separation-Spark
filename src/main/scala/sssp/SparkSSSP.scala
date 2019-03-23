@@ -4,6 +4,18 @@ import org.apache.spark.sql.SparkSession
 
 object SparkSSSP {
 
+  def getMin(a: Int, b: Int): Int ={
+    if (a == -1){
+      return b
+    }
+
+    if (b == -1){
+      return a
+    }
+
+    if (a < b) a else b
+  }
+
   def main(args: Array[String]) {
 
     val spark = SparkSession
@@ -37,7 +49,7 @@ object SparkSSSP {
           })
         )
 
-      distances = temp.union(distances)
+      distances = temp.union(distances).reduceByKey((x,y) => getMin(x,y))
 
       }
 
