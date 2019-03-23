@@ -1,12 +1,14 @@
-Spark HW4
+Project Intermediate
 CS6240
 Spring 2019
 
-Spark Program for Page Rank
+Spark Program for Single Source Shortest Path
 
 Code author
 -----------
 Javesh Monga
+Vivin Wilson
+Virat Goradia
 
 Installation
 ------------
@@ -37,7 +39,7 @@ Execution
 All of the build & execution commands are organized in the Makefile.
 1) Unzip project file.
 2) Open command prompt.
-3) Navigate to directory where project files unzipped. You can set the number of iteration of PR in make file.
+3) Navigate to directory where project files unzipped.
 4) Edit the Makefile to customize the environment at the top.
 	Sufficient for standalone: hadoop.root, jar.name, local.input
 	Other defaults acceptable for running standalone.

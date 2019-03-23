@@ -7,19 +7,18 @@ hadoop.root=${HADOOP_HOME}
 app.name=Twitter Data Spark
 jar.name=spark-demo.jar
 maven.jar.name=spark-demo-1.0.jar
-job.name=sparkpr.SparkPR
+job.name=sssp.SparkSSSP
 local.master=local[4]
 local.input=input
 local.output=output
 local.log=log
-local.iters=10
 # Pseudo-Cluster Execution
 hdfs.user.name=joe
 hdfs.input=input
 hdfs.output=output
 # AWS EMR Execution
 aws.emr.release=emr-5.20.0
-aws.bucket.name=jm-mr-spark
+aws.bucket.name=project-30-mr-spark
 aws.input=input
 aws.output=output
 aws.log.dir=log
@@ -38,7 +37,7 @@ clean-local-output:
 
 # Runs standalone
 local: jar clean-local-output
-	spark-submit --class ${job.name} --master ${local.master} --name "${app.name}" ${jar.name} ${local.input} ${local.iters} ${local.output}
+	spark-submit --class ${job.name} --master ${local.master} --name "${app.name}" ${jar.name} ${local.input} ${local.output}
 
 # Start HDFS
 start-hdfs:
@@ -112,7 +111,7 @@ upload-app-aws:
 # Main EMR launch.
 aws: jar upload-app-aws delete-output-aws
 	aws emr create-cluster \
-		--name "Spark PR" \
+		--name "Spark SSSP Group 30" \
 		--release-label ${aws.emr.release} \
 		--instance-groups '[{"InstanceCount":${aws.num.nodes},"InstanceGroupType":"CORE","InstanceType":"${aws.instance.type}"},{"InstanceCount":1,"InstanceGroupType":"MASTER","InstanceType":"${aws.instance.type}"}]' \
 	    --applications Name=Hadoop Name=Spark \
