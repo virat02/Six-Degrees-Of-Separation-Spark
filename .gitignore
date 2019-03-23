@@ -29,7 +29,7 @@ hs_err_pid*
 .idea/*
 
 #input dir huge files
-input/*
-input/
+#input/*
+#input/
 
 *.gz
