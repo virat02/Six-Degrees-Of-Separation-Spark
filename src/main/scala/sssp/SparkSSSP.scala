@@ -23,6 +23,11 @@ object SparkSSSP {
       .appName("SingleSourceShortestPath")
       .getOrCreate()
 
+    // val conf = new SparkConf().setAppName("pageRank")
+    // conf.set("spark.eventLog.enabled","true")
+    // conf.set("spark.eventLog.dir","eventlog")
+    // val spark = new SparkContext(conf)
+
     val lines = spark.read.textFile(args(0)).rdd
 
     val graph = lines.map { s =>
@@ -38,7 +43,8 @@ object SparkSSSP {
 
     var temp = distances
 
-    for (iterationCount<-1 to 10) {
+    var done = false
+    while(!done) {
 
       temp = graph.join(temp)
         .flatMap(x => x._2._1
@@ -49,11 +55,17 @@ object SparkSSSP {
           })
         )
 
-      distances = temp.union(distances).reduceByKey((x,y) => getMin(x,y))
+      val distances1 = temp.union(distances).reduceByKey((x,y) => getMin(x,y))
+      
+      done = distances.join(distances1)
+      .map{case (x,y) => y._1 == y._2}
+      .reduce((x,y) => x && y)
 
-      }
-
+      distances = distances1 
+    }
     println(distances.collect().foreach(println))
     distances.saveAsTextFile(args(1))
+    
+
   }
 }
