@@ -1,28 +1,29 @@
-# Makefile for Spark Twitter project.
+# Makefile for Spark WordCount project.
 
 # Customize these paths for your environment.
 # -----------------------------------------------------------
-spark.root=/Users/vivinwilson/LSDP/spark-2.4.0-bin-without-hadoop
-hadoop.root=/Users/vivinwilson/LSDP/hadoop-2.8.5
-app.name=SingleSourceShortestPath
-jar.name=sssp.jar
+spark.root=${SPARK_HOME}
+hadoop.root=${HADOOP_HOME}
+app.name=SSSP Spark
+jar.name=spark-demo.jar
 maven.jar.name=SingleSourceShortestPath-1.0-SNAPSHOT.jar
 job.name=sssp.App
 local.master=local[4]
 local.input=input
 local.output=output
+local.log=log
 # Pseudo-Cluster Execution
-hdfs.user.name=vivinwilson
+hdfs.user.name=joe
 hdfs.input=input
 hdfs.output=output
 # AWS EMR Execution
 aws.emr.release=emr-5.20.0
-aws.bucket.name=mr-group-30
+aws.bucket.name=project-30-mr-spark
 aws.input=input
 aws.output=output
 aws.log.dir=log
 aws.num.nodes=5
-aws.instance.type=m4.xlarge
+aws.instance.type=m4.large
 # -----------------------------------------------------------
 
 # Compiles code and builds jar (with dependencies).
@@ -36,16 +37,16 @@ clean-local-output:
 
 # Runs standalone
 local: jar clean-local-output
-	${spark.root}/bin/spark-submit --class ${job.name} --master ${local.master} --name "${app.name}" ${jar.name} ${local.input} ${local.output}
+	spark-submit --class ${job.name} --master ${local.master} --name "${app.name}" ${jar.name} ${local.input} ${local.output}
 
 # Start HDFS
 start-hdfs:
 	${hadoop.root}/sbin/start-dfs.sh
 
 # Stop HDFS
-stop-hdfs: 
+stop-hdfs:
 	${hadoop.root}/sbin/stop-dfs.sh
-	
+
 # Start YARN
 start-yarn: stop-yarn
 	${hadoop.root}/sbin/start-yarn.sh
@@ -59,7 +60,7 @@ format-hdfs: stop-hdfs
 	rm -rf /tmp/hadoop*
 	${hadoop.root}/bin/hdfs namenode -format
 
-# Initializes user & input directories of HDFS.	
+# Initializes user & input directories of HDFS.
 init-hdfs: start-hdfs
 	${hadoop.root}/bin/hdfs dfs -rm -r -f /user
 	${hadoop.root}/bin/hdfs dfs -mkdir /user
@@ -82,13 +83,13 @@ download-output-hdfs:
 # Runs pseudo-clustered (ALL). ONLY RUN THIS ONCE, THEN USE: make pseudoq
 # Make sure Hadoop  is set up (in /etc/hadoop files) for pseudo-clustered operation (not standalone).
 # https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Pseudo-Distributed_Operation
-pseudo: jar stop-yarn format-hdfs init-hdfs upload-input-hdfs start-yarn clean-local-output 
-	${spark.root}/bin/spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
+pseudo: jar stop-yarn format-hdfs init-hdfs upload-input-hdfs start-yarn clean-local-output
+	spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
 	make download-output-hdfs
 
 # Runs pseudo-clustered (quickie).
-pseudoq: jar clean-local-output clean-hdfs-output 
-	${spark.root}/bin/spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
+pseudoq: jar clean-local-output clean-hdfs-output
+	spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
 	make download-output-hdfs
 
 # Create S3 bucket.
@@ -98,7 +99,7 @@ make-bucket:
 # Upload data to S3 input dir.
 upload-input-aws: make-bucket
 	aws s3 sync ${local.input} s3://${aws.bucket.name}/${aws.input}
-	
+
 # Delete S3 output dir.
 delete-output-aws:
 	aws s3 rm s3://${aws.bucket.name}/ --recursive --exclude "*" --include "${aws.output}*"
@@ -110,7 +111,7 @@ upload-app-aws:
 # Main EMR launch.
 aws: jar upload-app-aws delete-output-aws
 	aws emr create-cluster \
-		--name "Twitter Spark Cluster" \
+		--name "Spark SSSP Group 30" \
 		--release-label ${aws.emr.release} \
 		--instance-groups '[{"InstanceCount":${aws.num.nodes},"InstanceGroupType":"CORE","InstanceType":"${aws.instance.type}"},{"InstanceCount":1,"InstanceGroupType":"MASTER","InstanceType":"${aws.instance.type}"}]' \
 	    --applications Name=Hadoop Name=Spark \
@@ -119,11 +120,20 @@ aws: jar upload-app-aws delete-output-aws
 		--use-default-roles \
 		--enable-debugging \
 		--auto-terminate
-		
+
 # Download output from S3.
 download-output-aws: clean-local-output
 	mkdir ${local.output}
 	aws s3 sync s3://${aws.bucket.name}/${aws.output} ${local.output}
+
+# Removes local log directory.
+clean-log:
+	rm -rf ${local.log}*
+
+# Download logs from S3.
+download-log-aws: clean-log
+	mkdir ${local.log}
+	aws s3 sync s3://${aws.bucket.name}/${aws.log.dir} ${local.log}
 
 # Change to standalone mode.
 switch-standalone:
@@ -133,3 +143,17 @@ switch-standalone:
 switch-pseudo:
 	cp config/pseudo/*.xml ${hadoop.root}/etc/hadoop
 
+# Package for release.
+distro:
+	rm -f Spark-Demo.tar.gz
+	rm -f Spark-Demo.zip
+	rm -rf build
+	mkdir -p build/deliv/Spark-Demo
+	cp -r src build/deliv/Spark-Demo
+	cp -r config build/deliv/Spark-Demo
+	cp -r input build/deliv/Spark-Demo
+	cp pom.xml build/deliv/Spark-Demo
+	cp Makefile build/deliv/Spark-Demo
+	cp README.txt build/deliv/Spark-Demo
+	tar -czf Spark-Demo.tar.gz -C build/deliv Spark-Demo
+	cd build/deliv && zip -rq ../../Spark-Demo.zip Spark-Demo
