@@ -6,10 +6,10 @@ import org.apache.log4j.LogManager
 import org.apache.log4j.Level
 
 /**
- * @author ${user.name}
- */
+  * @author ${user.name}
+  */
 object App {
-  
+
   def getMin(a: Int, b: Int): Int ={
     if (a == -1){
       return b
@@ -59,12 +59,12 @@ object App {
         )
 
       val distances1 = temp.union(distances).reduceByKey((x,y) => getMin(x,y))
-      
-      done = distances.join(distances1)
-      .map{case (x,y) => y._1 == y._2}
-      .reduce((x,y) => x && y)
 
-      distances = distances1 
+      done = distances.join(distances1)
+        .map{case (x,y) => y._1 == y._2}
+        .reduce((x,y) => x && y)
+
+      distances = distances1
     }
     println(distances.collect().foreach(println))
     distances.saveAsTextFile(args(1))
