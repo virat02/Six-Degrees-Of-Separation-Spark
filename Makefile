@@ -1,29 +1,28 @@
-# Makefile for Spark WordCount project.
+# Makefile for Spark Twitter project.
 
 # Customize these paths for your environment.
 # -----------------------------------------------------------
-spark.root=${SPARK_HOME}
-hadoop.root=${HADOOP_HOME}
-app.name=Twitter Data Spark
-jar.name=spark-demo.jar
-maven.jar.name=spark-demo-1.0.jar
-job.name=sssp.SparkSSSP
+spark.root=/Users/vivinwilson/LSDP/spark-2.4.0-bin-without-hadoop
+hadoop.root=/Users/vivinwilson/LSDP/hadoop-2.8.5
+app.name=SingleSourceShortestPath
+jar.name=sssp.jar
+maven.jar.name=SingleSourceShortestPath-1.0-SNAPSHOT.jar
+job.name=sssp.App
 local.master=local[4]
 local.input=input
 local.output=output
-local.log=log
 # Pseudo-Cluster Execution
-hdfs.user.name=joe
+hdfs.user.name=vivinwilson
 hdfs.input=input
 hdfs.output=output
 # AWS EMR Execution
 aws.emr.release=emr-5.20.0
-aws.bucket.name=project-30-mr-spark
+aws.bucket.name=mr-group-30
 aws.input=input
 aws.output=output
 aws.log.dir=log
 aws.num.nodes=5
-aws.instance.type=m4.large
+aws.instance.type=m4.xlarge
 # -----------------------------------------------------------
 
 # Compiles code and builds jar (with dependencies).
@@ -37,7 +36,7 @@ clean-local-output:
 
 # Runs standalone
 local: jar clean-local-output
-	spark-submit --class ${job.name} --master ${local.master} --name "${app.name}" ${jar.name} ${local.input} ${local.output}
+	${spark.root}/bin/spark-submit --class ${job.name} --master ${local.master} --name "${app.name}" ${jar.name} ${local.input} ${local.output}
 
 # Start HDFS
 start-hdfs:
@@ -84,12 +83,12 @@ download-output-hdfs:
 # Make sure Hadoop  is set up (in /etc/hadoop files) for pseudo-clustered operation (not standalone).
 # https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/SingleCluster.html#Pseudo-Distributed_Operation
 pseudo: jar stop-yarn format-hdfs init-hdfs upload-input-hdfs start-yarn clean-local-output 
-	spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
+	${spark.root}/bin/spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
 	make download-output-hdfs
 
 # Runs pseudo-clustered (quickie).
 pseudoq: jar clean-local-output clean-hdfs-output 
-	spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
+	${spark.root}/bin/spark-submit --class ${job.name} --master yarn --deploy-mode cluster ${jar.name} ${local.input} ${local.output}
 	make download-output-hdfs
 
 # Create S3 bucket.
@@ -111,7 +110,7 @@ upload-app-aws:
 # Main EMR launch.
 aws: jar upload-app-aws delete-output-aws
 	aws emr create-cluster \
-		--name "Spark SSSP Group 30" \
+		--name "Twitter Spark Cluster" \
 		--release-label ${aws.emr.release} \
 		--instance-groups '[{"InstanceCount":${aws.num.nodes},"InstanceGroupType":"CORE","InstanceType":"${aws.instance.type}"},{"InstanceCount":1,"InstanceGroupType":"MASTER","InstanceType":"${aws.instance.type}"}]' \
 	    --applications Name=Hadoop Name=Spark \
@@ -126,15 +125,6 @@ download-output-aws: clean-local-output
 	mkdir ${local.output}
 	aws s3 sync s3://${aws.bucket.name}/${aws.output} ${local.output}
 
-# Removes local log directory.
-clean-log:
-	rm -rf ${local.log}*
-
-# Download logs from S3.
-download-log-aws: clean-log
-	mkdir ${local.log}
-	aws s3 sync s3://${aws.bucket.name}/${aws.log.dir} ${local.log}
-
 # Change to standalone mode.
 switch-standalone:
 	cp config/standalone/*.xml ${hadoop.root}/etc/hadoop
@@ -143,18 +133,3 @@ switch-standalone:
 switch-pseudo:
 	cp config/pseudo/*.xml ${hadoop.root}/etc/hadoop
 
-# Package for release.
-distro:
-	rm -f Spark-Demo.tar.gz
-	rm -f Spark-Demo.zip
-	rm -rf build
-	mkdir -p build/deliv/Spark-Demo
-	cp -r src build/deliv/Spark-Demo
-	cp -r config build/deliv/Spark-Demo
-	cp -r input build/deliv/Spark-Demo
-	cp pom.xml build/deliv/Spark-Demo
-	cp Makefile build/deliv/Spark-Demo
-	cp README.txt build/deliv/Spark-Demo
-	tar -czf Spark-Demo.tar.gz -C build/deliv Spark-Demo
-	cd build/deliv && zip -rq ../../Spark-Demo.zip Spark-Demo
-	
