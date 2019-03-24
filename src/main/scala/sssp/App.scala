@@ -3,11 +3,10 @@ package sssp
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.log4j.LogManager
-import org.apache.log4j.Level
 import util.control.Breaks._
 
 /**
-  * @author ${user.name}
+  * @author Group 30
   */
 object App {
 
@@ -21,14 +20,28 @@ object App {
 
   def main(args: Array[String]) {
 
+    val logger: org.apache.log4j.Logger = LogManager.getRootLogger
+
+    if (args.length != 4) {
+      logger.error("Usage:\npr.SingleSourceShortestPath <input dir> <output dir> <threshold> <source>")
+      System.exit(1)
+    }
+
     val conf = new SparkConf().setAppName("SingleSourceShortestPath")
     conf.set("spark.eventLog.enabled","true")
     conf.set("spark.eventLog.dir","eventlog")
     val spark = new SparkContext(conf)
 
+    //Read the input
     val lines = spark.textFile(args(0))
-    val MAX = 50
 
+    //Get the MAX threshold
+    val MAX = args(2).toInt
+
+    //Get the source
+    val source = args(3).toInt
+
+    //Create the graph RDD as (node, adjacency list)
     val graph = lines.map { s =>
       val parts = s.split(",")
       (parts(0), parts(1))
@@ -47,7 +60,7 @@ object App {
 
     //Get the initial distance RDD
     var distances = graph
-      .map( x => if (x._1.toInt == 1) (x._1,0) else (x._1,-1))
+      .map( x => if (x._1.toInt == source) (x._1,0) else (x._1,-1))
 
     //distances will update after each iteration
     var temp = distances
