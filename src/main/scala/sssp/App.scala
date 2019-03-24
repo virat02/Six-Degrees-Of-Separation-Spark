@@ -35,8 +35,14 @@ object App {
     }
       //Filter out values above the threshold MAX
       .filter(x => x._1.toInt <= MAX && x._2.toInt <= MAX)
+
+      //pre-process the data to remove duplicates
       .distinct()
+
+      //get the adjacency list
       .groupByKey()
+
+      //cache the RDD
       .cache()
 
     //Get the initial distance RDD
@@ -46,29 +52,30 @@ object App {
     //distances will update after each iteration
     var temp = distances
 
-    var done = false
-    
-    while (!done) {
+    breakable {
+      while(true) {
 
-      //distances, through different existing paths, for all the nodes reached so far
-      temp = graph.join(temp)
+        //distances, through different existing paths, for all the nodes reached so far
+        temp = graph.join(temp)
           .filter(x => x._2._2 != -1)
           .flatMap(x => x._2._1
             .map(y => (y, x._2._2 + 1)))
 
-      //updated distances for all nodes reached so far
-      val distances1 = temp.union(distances).reduceByKey((x, y) => getMin(x, y))
+        //updated distances for all nodes reached so far
+        val distances1 = temp.union(distances).reduceByKey((x, y) => getMin(x, y))
 
-      //check if any distance for any node has changed,
-      // as well as all nodes are visited from the given source to all it's targets
-      done = distances.join(distances1)
-        .map { case (x, y) => y._1 == y._2 }
-        .reduce((x, y) => x && y)
+        //check if any distance for any node has changed,
+        // as well as all nodes are visited from the given source to all it's targets
+        val done = distances.join(distances1)
+          .map { case (x, y) => y._1 == y._2 }
+          .reduce((x, y) => x && y)
 
-      //Update the distances RDD only if it has changed from it's previous state
-      distances = distances1
+        //Update the distances RDD only if it has changed from it's previous state
+        if (!done) distances = distances1 else break
+      }
     }
 
+    //save the output
     distances.saveAsTextFile(args(1))
   }
 }
