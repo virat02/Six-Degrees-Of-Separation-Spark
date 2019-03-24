@@ -29,17 +29,19 @@ object SparkSSSP {
     // val spark = new SparkContext(conf)
 
     val lines = spark.read.textFile(args(0)).rdd
+    val MAX = 50
 
     val graph = lines.map { s =>
       val parts = s.split(",")
       (parts(0), parts(1))
     }
+      .filter(x => x._1.toInt <= MAX && x._2.toInt <= MAX)
       .distinct()
       .groupByKey()
       .cache()
 
     var distances = graph
-      .map( x => if (x._1.toInt == 1) (x._1,0) else (x._1,-1))
+      .map( x => if (x._1.toInt == 2) (x._1,0) else (x._1,-1))
 
     var temp = distances
 
