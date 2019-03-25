@@ -8,19 +8,19 @@ app.name=SSSP Spark
 jar.name=spark-demo.jar
 maven.jar.name=SingleSourceShortestPath-1.0-SNAPSHOT.jar
 job.name=sssp.App
-source=1
-threshold=50
+source=2
+threshold=1000
 local.master=local[4]
 local.input=input
-local.output=output
-local.log=log
+local.output=output_m_1000_s_2
+local.log=log_m_1000_s_2
 # Pseudo-Cluster Execution
 hdfs.user.name=joe
 hdfs.input=input
 hdfs.output=output
 # AWS EMR Execution
 aws.emr.release=emr-5.20.0
-aws.bucket.name=project-30-mr-spark
+aws.bucket.name=project-30-m-1000-s-2
 aws.input=input
 aws.output=output
 aws.log.dir=log
@@ -113,11 +113,11 @@ upload-app-aws:
 # Main EMR launch.
 aws: jar upload-app-aws delete-output-aws
 	aws emr create-cluster \
-		--name "Spark SSSP Group 30" \
+		--name "Spark SSSP Group 30 small cluster M=1000 s=2" \
 		--release-label ${aws.emr.release} \
 		--instance-groups '[{"InstanceCount":${aws.num.nodes},"InstanceGroupType":"CORE","InstanceType":"${aws.instance.type}"},{"InstanceCount":1,"InstanceGroupType":"MASTER","InstanceType":"${aws.instance.type}"}]' \
 	    --applications Name=Hadoop Name=Spark \
-		--steps Type=CUSTOM_JAR,Name="${app.name}",Jar="command-runner.jar",ActionOnFailure=TERMINATE_CLUSTER,Args=["spark-submit","--deploy-mode","cluster","--class","${job.name}","s3://${aws.bucket.name}/${jar.name}","s3://${aws.bucket.name}/${aws.input}","s3://${aws.bucket.name}/${aws.output}", "${threshold}", "${source}"] \
+		--steps Type=CUSTOM_JAR,Name="${app.name}",Jar="command-runner.jar",ActionOnFailure=TERMINATE_CLUSTER,Args=["spark-submit","--deploy-mode","cluster","--class","${job.name}","s3://${aws.bucket.name}/${jar.name}","s3://${aws.bucket.name}/${aws.input}","s3://${aws.bucket.name}/${aws.output}","${threshold}","${source}"] \
 		--log-uri s3://${aws.bucket.name}/${aws.log.dir} \
 		--use-default-roles \
 		--enable-debugging \

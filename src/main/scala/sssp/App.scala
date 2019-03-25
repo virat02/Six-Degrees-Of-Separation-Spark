@@ -28,8 +28,8 @@ object App {
     }
 
     val conf = new SparkConf().setAppName("SingleSourceShortestPath")
-    conf.set("spark.eventLog.enabled","true")
-    conf.set("spark.eventLog.dir","eventlog")
+//    conf.set("spark.eventLog.enabled","true")
+//    conf.set("spark.eventLog.dir","eventlog")
     val spark = new SparkContext(conf)
 
     //Read the input
