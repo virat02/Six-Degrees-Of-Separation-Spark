@@ -12,19 +12,19 @@ source=3
 threshold=2500
 local.master=local[4]
 local.input=input
-local.output=output_m_2500_s_3
-local.log=log_m_2500_s_3
+local.output=output_large_m_1000_s_3
+local.log=log_large_m_1000_s_3
 # Pseudo-Cluster Execution
 hdfs.user.name=joe
 hdfs.input=input
 hdfs.output=output
 # AWS EMR Execution
 aws.emr.release=emr-5.20.0
-aws.bucket.name=project-30-vivin
+aws.bucket.name=project-30
 aws.input=input
 aws.output=output
 aws.log.dir=log
-aws.num.nodes=5
+aws.num.nodes=10
 aws.instance.type=m4.large
 # -----------------------------------------------------------
 
@@ -113,7 +113,7 @@ upload-app-aws:
 # Main EMR launch.
 aws: jar upload-app-aws delete-output-aws
 	aws emr create-cluster \
-		--name "Spark SSSP Group 30 small cluster M=2500 s=3" \
+		--name "Spark SSSP Group 30 large cluster M=1000 s=3" \
 		--release-label ${aws.emr.release} \
 		--instance-groups '[{"InstanceCount":${aws.num.nodes},"InstanceGroupType":"CORE","InstanceType":"${aws.instance.type}"},{"InstanceCount":1,"InstanceGroupType":"MASTER","InstanceType":"${aws.instance.type}"}]' \
 	    --applications Name=Hadoop Name=Spark \

@@ -1,0 +1,171 @@
+log4j:ERROR setFile(null,true) call failed.
+java.io.FileNotFoundException: /stderr (Permission denied)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(FileOutputStream.java:270)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:213)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:133)
+	at org.apache.log4j.FileAppender.setFile(FileAppender.java:294)
+	at org.apache.log4j.FileAppender.activateOptions(FileAppender.java:165)
+	at org.apache.log4j.DailyRollingFileAppender.activateOptions(DailyRollingFileAppender.java:223)
+	at org.apache.log4j.config.PropertySetter.activate(PropertySetter.java:307)
+	at org.apache.log4j.config.PropertySetter.setProperties(PropertySetter.java:172)
+	at org.apache.log4j.config.PropertySetter.setProperties(PropertySetter.java:104)
+	at org.apache.log4j.PropertyConfigurator.parseAppender(PropertyConfigurator.java:842)
+	at org.apache.log4j.PropertyConfigurator.parseCategory(PropertyConfigurator.java:768)
+	at org.apache.log4j.PropertyConfigurator.parseCatsAndRenderers(PropertyConfigurator.java:672)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:516)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:580)
+	at org.apache.log4j.helpers.OptionConverter.selectAndConfigure(OptionConverter.java:526)
+	at org.apache.log4j.LogManager.<clinit>(LogManager.java:127)
+	at org.apache.spark.internal.Logging$class.initializeLogging(Logging.scala:120)
+	at org.apache.spark.internal.Logging$class.initializeLogIfNecessary(Logging.scala:108)
+	at org.apache.spark.deploy.SparkSubmit.initializeLogIfNecessary(SparkSubmit.scala:71)
+	at org.apache.spark.deploy.SparkSubmit.doSubmit(SparkSubmit.scala:79)
+	at org.apache.spark.deploy.SparkSubmit$$anon$2.doSubmit(SparkSubmit.scala:924)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:933)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+log4j:ERROR Either File or DatePattern options are not set for appender [DRFA-stderr].
+log4j:ERROR setFile(null,true) call failed.
+java.io.FileNotFoundException: /stdout (Permission denied)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(FileOutputStream.java:270)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:213)
+	at java.io.FileOutputStream.<init>(FileOutputStream.java:133)
+	at org.apache.log4j.FileAppender.setFile(FileAppender.java:294)
+	at org.apache.log4j.FileAppender.activateOptions(FileAppender.java:165)
+	at org.apache.log4j.DailyRollingFileAppender.activateOptions(DailyRollingFileAppender.java:223)
+	at org.apache.log4j.config.PropertySetter.activate(PropertySetter.java:307)
+	at org.apache.log4j.config.PropertySetter.setProperties(PropertySetter.java:172)
+	at org.apache.log4j.config.PropertySetter.setProperties(PropertySetter.java:104)
+	at org.apache.log4j.PropertyConfigurator.parseAppender(PropertyConfigurator.java:842)
+	at org.apache.log4j.PropertyConfigurator.parseCategory(PropertyConfigurator.java:768)
+	at org.apache.log4j.PropertyConfigurator.parseCatsAndRenderers(PropertyConfigurator.java:672)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:516)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:580)
+	at org.apache.log4j.helpers.OptionConverter.selectAndConfigure(OptionConverter.java:526)
+	at org.apache.log4j.LogManager.<clinit>(LogManager.java:127)
+	at org.apache.spark.internal.Logging$class.initializeLogging(Logging.scala:120)
+	at org.apache.spark.internal.Logging$class.initializeLogIfNecessary(Logging.scala:108)
+	at org.apache.spark.deploy.SparkSubmit.initializeLogIfNecessary(SparkSubmit.scala:71)
+	at org.apache.spark.deploy.SparkSubmit.doSubmit(SparkSubmit.scala:79)
+	at org.apache.spark.deploy.SparkSubmit$$anon$2.doSubmit(SparkSubmit.scala:924)
+	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:933)
+	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+log4j:ERROR Either File or DatePattern options are not set for appender [DRFA-stdout].
+19/03/25 01:51:55 WARN DependencyUtils: Skip remote jar s3://project-30/spark-demo.jar.
+19/03/25 01:51:56 INFO RMProxy: Connecting to ResourceManager at ip-172-31-95-107.ec2.internal/172.31.95.107:8032
+19/03/25 01:51:57 INFO Client: Requesting a new application from cluster with 10 NodeManagers
+19/03/25 01:51:57 INFO Client: Verifying our application has not requested more than the maximum memory capability of the cluster (6144 MB per container)
+19/03/25 01:51:57 INFO Client: Will allocate AM container, with 1408 MB memory including 384 MB overhead
+19/03/25 01:51:57 INFO Client: Setting up container launch context for our AM
+19/03/25 01:51:57 INFO Client: Setting up the launch environment for our AM container
+19/03/25 01:51:57 INFO Client: Preparing resources for our AM container
+19/03/25 01:51:57 WARN Client: Neither spark.yarn.jars nor spark.yarn.archive is set, falling back to uploading libraries under SPARK_HOME.
+19/03/25 01:51:59 INFO Client: Uploading resource file:/mnt/tmp/spark-e30331c4-95c4-4161-9e4c-035eb377e420/__spark_libs__3257051740061857656.zip -> hdfs://ip-172-31-95-107.ec2.internal:8020/user/hadoop/.sparkStaging/application_1553478564279_0001/__spark_libs__3257051740061857656.zip
+19/03/25 01:52:04 INFO Client: Uploading resource s3://project-30/spark-demo.jar -> hdfs://ip-172-31-95-107.ec2.internal:8020/user/hadoop/.sparkStaging/application_1553478564279_0001/spark-demo.jar
+19/03/25 01:52:05 INFO S3NativeFileSystem: Opening 's3://project-30/spark-demo.jar' for reading
+19/03/25 01:52:05 INFO Client: Uploading resource file:/mnt/tmp/spark-e30331c4-95c4-4161-9e4c-035eb377e420/__spark_conf__3930882809273485265.zip -> hdfs://ip-172-31-95-107.ec2.internal:8020/user/hadoop/.sparkStaging/application_1553478564279_0001/__spark_conf__.zip
+19/03/25 01:52:05 INFO SecurityManager: Changing view acls to: hadoop
+19/03/25 01:52:05 INFO SecurityManager: Changing modify acls to: hadoop
+19/03/25 01:52:05 INFO SecurityManager: Changing view acls groups to: 
+19/03/25 01:52:05 INFO SecurityManager: Changing modify acls groups to: 
+19/03/25 01:52:05 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(hadoop); groups with view permissions: Set(); users  with modify permissions: Set(hadoop); groups with modify permissions: Set()
+19/03/25 01:52:08 INFO Client: Submitting application application_1553478564279_0001 to ResourceManager
+19/03/25 01:52:09 INFO YarnClientImpl: Submitted application application_1553478564279_0001
+19/03/25 01:52:10 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:10 INFO Client: 
+	 client token: N/A
+	 diagnostics: AM container is launched, waiting for AM container to Register with RM
+	 ApplicationMaster host: N/A
+	 ApplicationMaster RPC port: -1
+	 queue: default
+	 start time: 1553478728830
+	 final status: UNDEFINED
+	 tracking URL: http://ip-172-31-95-107.ec2.internal:20888/proxy/application_1553478564279_0001/
+	 user: hadoop
+19/03/25 01:52:11 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:12 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:13 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:14 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:15 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:16 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:17 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:18 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:19 INFO Client: Application report for application_1553478564279_0001 (state: ACCEPTED)
+19/03/25 01:52:20 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:20 INFO Client: 
+	 client token: N/A
+	 diagnostics: N/A
+	 ApplicationMaster host: ip-172-31-93-5.ec2.internal
+	 ApplicationMaster RPC port: 37319
+	 queue: default
+	 start time: 1553478728830
+	 final status: UNDEFINED
+	 tracking URL: http://ip-172-31-95-107.ec2.internal:20888/proxy/application_1553478564279_0001/
+	 user: hadoop
+19/03/25 01:52:21 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:22 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:23 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:24 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:25 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:26 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:27 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:28 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:29 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:30 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:31 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:32 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:33 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:34 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:35 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:36 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:37 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:38 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:39 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:40 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:41 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:42 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:43 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:44 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:45 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:46 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:47 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:48 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:49 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:50 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:51 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:52 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:53 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:54 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:55 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:56 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:57 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:58 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:52:59 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:00 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:01 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:02 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:03 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:04 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:05 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:06 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:07 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:08 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:09 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:10 INFO Client: Application report for application_1553478564279_0001 (state: RUNNING)
+19/03/25 01:53:11 INFO Client: Application report for application_1553478564279_0001 (state: FINISHED)
+19/03/25 01:53:11 INFO Client: 
+	 client token: N/A
+	 diagnostics: N/A
+	 ApplicationMaster host: ip-172-31-93-5.ec2.internal
+	 ApplicationMaster RPC port: 37319
+	 queue: default
+	 start time: 1553478728830
+	 final status: SUCCEEDED
+	 tracking URL: http://ip-172-31-95-107.ec2.internal:20888/proxy/application_1553478564279_0001/
+	 user: hadoop
+19/03/25 01:53:11 INFO Client: Deleted staging directory hdfs://ip-172-31-95-107.ec2.internal:8020/user/hadoop/.sparkStaging/application_1553478564279_0001
+19/03/25 01:53:11 INFO ShutdownHookManager: Shutdown hook called
+19/03/25 01:53:11 INFO ShutdownHookManager: Deleting directory /mnt/tmp/spark-0f10e081-79d7-4a93-bffb-9d21f1cb97cd
+19/03/25 01:53:11 INFO ShutdownHookManager: Deleting directory /mnt/tmp/spark-e30331c4-95c4-4161-9e4c-035eb377e420
+Command exiting with ret '0'
