@@ -9,11 +9,11 @@ jar.name=spark-demo.jar
 maven.jar.name=SingleSourceShortestPath-1.0-SNAPSHOT.jar
 job.name=sssp.App
 source=3
-threshold=1000
+threshold=5000
 local.master=local[4]
 local.input=input
-local.output=output_m_1000_s_3
-local.log=log_m_1000_s_3
+local.output=output_m_5000_s_3
+local.log=log_m_5000_s_3
 # Pseudo-Cluster Execution
 hdfs.user.name=joe
 hdfs.input=input
@@ -113,7 +113,7 @@ upload-app-aws:
 # Main EMR launch.
 aws: jar upload-app-aws delete-output-aws
 	aws emr create-cluster \
-		--name "Spark SSSP Group 30 small cluster M=1000 s=3" \
+		--name "Spark SSSP Group 30 small cluster M=5000 s=3" \
 		--release-label ${aws.emr.release} \
 		--instance-groups '[{"InstanceCount":${aws.num.nodes},"InstanceGroupType":"CORE","InstanceType":"${aws.instance.type}"},{"InstanceCount":1,"InstanceGroupType":"MASTER","InstanceType":"${aws.instance.type}"}]' \
 	    --applications Name=Hadoop Name=Spark \
