@@ -6,9 +6,17 @@ Spark Program for Single Source Shortest Path
 
 Code author
 -----------
-Javesh Monga
-Vivin Wilson
-Virat Goradia
+- Javesh Monga
+- Vivin Wilson
+- Virat Goradia
+
+## Proof
+
+As the single source shortest path is based on Breadth First Search algorithm, each new Spark Job indicates that a new level/breadth in the user relations tree is being processed. Thus, according to the six degrees theory we must never get more than 7 Spark jobs in our executions where the 7th job marks the convergence of our execution due to no change in the results from the 6th job. We were able to observe exactly this and thus could prove the six-degree theory.
+
+## Project Report 
+
+[Click here to view project report](https://docs.google.com/document/d/15zDsXcDInnR6-PjJXmhbfgh2_UjVYzycJe6uVRTPz1w/edit?usp=sharing)
 
 Installation
 ------------
