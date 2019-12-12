@@ -2,7 +2,7 @@ Project Intermediate
 CS6240
 Spring 2019
 
-Spark Program for Single Source Shortest Path
+Spark Program for Single Source Shortest Path and PageRank
 
 Code author
 -----------
